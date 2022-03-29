@@ -1,0 +1,10 @@
+- hosts: master
+  gather_facts: no
+  roles:
+    - role: master
+ 
+- hosts: slave
+  gather_facts: no
+  roles:
+    - role: slave
+ 

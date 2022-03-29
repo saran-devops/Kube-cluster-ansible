@@ -1,0 +1,79 @@
+---
+# Slave configuration
+- name: create slave Docker config directory
+  file: path=/etc/docker state=directory
+
+- name: changing slave Docker to systemd driver
+  copy:
+    dest: "/etc/docker/daemon.json"
+    content: |
+        {
+        "exec-opts": ["native.cgroupdriver=systemd"]
+        }
+
+- name: "installation of apt-transport"
+  apt:
+    name:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - vim
+    - software-properties-common
+    - iproute2
+    - net-tools
+    state: present
+    update_cache: true
+
+- name: Add Docker’s official GPG key
+  apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+    state: present
+    filename: docker
+    mode: 0600
+
+- name: Install docker
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: present
+    update_cache: true
+
+- name: add Kubernetes apt-key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Kubenetes repo
+  apt_repository:
+    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: 'kubernetes'
+    mode: 0600
+
+- name: installation of kubeadm,kubelet,kubectl
+  apt:
+    name:
+    - kubeadm
+    - kubectl
+    - kubelet
+    state: present
+    update_cache: true
+
+- name: Starting & enabling the docker and kubelet on master node
+  service:
+     name: "{{ item }}"
+     state: started
+     enabled: true
+  loop: "{{ service_names }}"
+
+- name: Cleaning Caches on RAM
+  shell: echo 3 > /proc/sys/vm/drop_caches
+

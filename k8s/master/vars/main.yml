@@ -1,0 +1,6 @@
+---
+# vars file for master
+
+service_names:
+  - "docker"
+  - "kubelet"

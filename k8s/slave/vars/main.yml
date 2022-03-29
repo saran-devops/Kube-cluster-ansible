@@ -1,0 +1,5 @@
+---
+# vars file for slave
+service_names:
+  - "docker"
+  - "kubelet"
