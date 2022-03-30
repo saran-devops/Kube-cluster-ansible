@@ -40,9 +40,7 @@
 - name: Install docker
   apt:
     name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
+      - docker.io
     state: present
     update_cache: true
 
@@ -57,6 +55,8 @@
     state: present
     filename: 'kubernetes'
     mode: 0600
+
+
 
 - name: installation of kubeadm,kubelet,kubectl
   apt:
