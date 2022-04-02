@@ -1,0 +1,5 @@
+- hosts: master
+  gather_facts: no
+  roles:
+    - role: springboot-k8-deployment
+ 

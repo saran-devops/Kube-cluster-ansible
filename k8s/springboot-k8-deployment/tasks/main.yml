@@ -1,0 +1,22 @@
+---
+# tasks file for springboot_mysql
+- name: Copying springboot and MySQL deployment files to K8s Master Node
+  become_method: sudo
+  copy:
+      src: "{{ item }}"
+      dest: /home/jenkins/springboot-crud-k8s/
+  loop:
+      - springboot-deployment.yml
+      - mysql-deployment.yml
+      - mysql-configmap.yml
+      - mysql-secrets.yml
+      - pv-mysql.yml
+
+- name: Configuration and Setup of Springboot crud application and MySQL
+  shell: "kubectl create -f /home/jenkins/springboot-crud-k8s/{{ item }}"
+  loop:
+        - mysql-secrets.yml
+        - mysql-configmap.yml
+        - pv-mysql.yml
+        - mysql-deployment.yml
+        - springboot-deployment.yml
